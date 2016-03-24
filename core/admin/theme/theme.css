@@ -4,13 +4,15 @@
 # This file is part of PluXml : http://www.pluxml.org
 #
 # Package:		theme.css
-# Copyright (c) 2014 PluXml
+# Copyright (c) 2016 PluXml
 # Authors		Jos, Stephane F.
 # Licensed under the GPL license.
 # See http://www.gnu.org/licenses/gpl.html
 #
 # ------------------- END LICENSE BLOCK -------------------
 */
+
+/* ---------- Authentication ---------- */
 
 .auth {
 	border:1px solid #aaa;
@@ -31,9 +33,15 @@
 	padding: .4rem;
 	text-align: center;
 }
+
+/* ---------- Main ---------- */
+
 .main.grid {
 	margin-right: 0;
 }
+
+/* ---------- Aside ---------- */
+
 .aside {
 	background-color: #222;
 	bottom: 0;
@@ -81,6 +89,9 @@
 .aside .menu-config {
 	background-color: #333;
 }
+
+/* ---------- Section ---------- */
+
 .section {
 	margin-bottom: 2rem;
 	margin-top: 8rem;
@@ -95,7 +106,7 @@
 	position: fixed;
 	top: 0;
 	width: 100%;
-	z-index: 0
+	z-index: 1;
 }
 .section .action-bar p,
 .section .action-bar ul {
@@ -166,7 +177,7 @@
 	display: inline-block;
 }
 .p_current {
-	color:red;
+	color: #258fd6;
 }
 .p_page:first-letter {
 	text-transform: uppercase;
@@ -215,6 +226,10 @@ tr:nth-child(even):hover {
 }
 #medias-table {
 	margin-top: 10px;
+}
+.publication input {
+	font-weight: bold;
+	color: #777;
 }
 .day, .month {
 	width: 2.1rem;
@@ -337,7 +352,6 @@ a.folder:focus span  {
 	width:100%;
 	background-color: #ffcfcf;
 }
-
 table {
 	border: 1px solid #efefef;
 }
@@ -356,7 +370,6 @@ td {
 td.wrap {
 	white-space: normal;
 }
-
 /* pour l'indentation des commentaires */
 .level-0 {
 	margin-left: 0;
@@ -376,7 +389,6 @@ td.wrap {
 .level-5 {
 	margin-left: 250px;
 }
-
 #id_answer {
 	margin-bottom: 10px;
 	padding:15px;
@@ -399,15 +411,12 @@ td.wrap {
 	color: #fff;
 	padding: .2rem .3rem;
 }
-
 /* pour la fenêtre modale de la visionneuse d'image */
-
 .modal {
 	display: block;
 	width: 100%;
 	position: absolute;
 }
-
 .modal__overlay {
 	background: #000;
 	top: 0;
@@ -418,11 +427,9 @@ td.wrap {
 	z-index: 999;
 	text-align:right;
 }
-
 .modal__box {
 	text-align:center;
 }
-
 .modal input {
 	position: absolute;
 	right: 100px;
@@ -430,7 +437,6 @@ td.wrap {
 	z-index: -10;
 	display: none;
 }
-
 .modal label {
 	color: #fff;
 	cursor: pointer;
@@ -440,18 +446,23 @@ td.wrap {
 	transition: all 0.55s;
 	padding: 10px;
 }
-
+@media (max-width: 767px) {
+	.modal label {
+		background-color: #000;
+		position: fixed;
+		right: 0;
+		top: 2rem;
+	}
+}
 .modal label:hover {
-	color: red;
+	color: #258fd6;
 	-webkit-transform: scale(0.97);
 	-ms-transform: scale(0.97);
 	transform: scale(0.97);
 }
-
 .modal__box img {
 	max-height: 100%;
 }
-
 .modal__overlay {
 	opacity: 0;
 	overflow: hidden;
@@ -462,7 +473,6 @@ td.wrap {
 	transition: all 0.75s cubic-bezier(0.19, 1, 0.22, 1);
 	visibility: hidden;
 }
-
 input:checked ~ .modal__overlay {
 	opacity: 1;
 	-webkit-transform: scale(1);
@@ -473,9 +483,7 @@ input:checked ~ .modal__overlay {
 	z-index: 800;
 	visibility: visible;
 }
-
 /* gestion des themes */
-
 .img-preview {
 	width: 200px;
 	max-width: 200px;
@@ -494,19 +502,10 @@ input:checked ~ .modal__overlay {
 tr.checked {
 	background-color: #E4EFFF;
 }
-
 /* image d'accroche */
-
 #id_thumbnail_img {
 	margin-top:10px;
 }
 #id_thumbnail_img img {
 	max-width: 100%;
-}
-
-.gridthumb {
-	background-color: #fffcf5;
-	border: 1px solid #ccc;
-	margin: 0 2px 0 2px;
-	padding-top: 10px;
 }

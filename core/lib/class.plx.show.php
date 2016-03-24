@@ -517,19 +517,26 @@ class plxShow {
 	 * Méthode qui affiche l'image d'accroche
 	 *
 	 * @param	format	format d'affichage (variables: #img_url, #img_alt, #img_title)
+	 * @param	echo 	si à VRAI affichage à l'écran
 	 * @return	stdout
 	 * @scope	home,categorie,article,tags,archives
 	 * @author	Stephane F
 	 **/
-	public function artThumbnail($format='<img class="art_thumbnail" src="#img_url" alt="#img_alt" title="#img_title" />') {
+	public function artThumbnail($format='<img class="art_thumbnail" src="#img_url" alt="#img_alt" title="#img_title" />', $echo=true) {
 
 		$imgUrl = $this->plxMotor->plxRecord_arts->f('thumbnail');
 		if($imgUrl) {
 			$row = str_replace('#img_url', $this->plxMotor->urlRewrite($imgUrl), $format);
 			$row = str_replace('#img_title', plxUtils::strCheck($this->plxMotor->plxRecord_arts->f('thumbnail_title')), $row);
 			$row = str_replace('#img_alt', $this->plxMotor->plxRecord_arts->f('thumbnail_alt'), $row);
-			echo $row;
+			if($echo)
+				echo $row;
+			else
+				return $row;
+		} else {
+			if(!$echo) return false;
 		}
+
 	}
 
 	/**
@@ -768,6 +775,32 @@ class plxShow {
 	}
 
 	/**
+	 * Méthode qui affiche la date de creation d'un article selon le format choisi
+	 *
+	 * @param	format	format du texte de la date (variable: #minute, #hour, #day, #month, #num_day, #num_day(1), #num_day(2), #num_month, #num_year(4), #num_year(2), #time)
+	 * @return	stdout
+	 * @scope	home,categorie,article,tags,archives
+	 * @author	Stephane F.
+	 **/
+	public function artCreationDate($format='#num_day/#num_month/#num_year(4) #time') {
+
+		echo plxDate::formatDate($this->plxMotor->plxRecord_arts->f('date_creation'),$format);
+	}
+
+	/**
+	 * Méthode qui affiche la date de mise à jour d'un article selon le format choisi
+	 *
+	 * @param	format	format du texte de la date (variable: #minute, #hour, #day, #month, #num_day, #num_day(1), #num_day(2), #num_month, #num_year(4), #num_year(2), #time)
+	 * @return	stdout
+	 * @scope	home,categorie,article,tags,archives
+	 * @author	Stephane F.
+	 **/
+	public function artUpdateDate($format='#num_day/#num_month/#num_year(4) #time') {
+
+		echo plxDate::formatDate($this->plxMotor->plxRecord_arts->f('date_update'),$format);
+	}
+
+	/**
 	 * Méthode qui affiche un lien vers le fil Rss des articles
 	 * d'une catégorie précise (si $categorie renseigné) ou du site tout entier
 	 *
@@ -908,7 +941,7 @@ class plxShow {
 				}
 				# On modifie nos motifs
 				$row = str_replace('#art_id',$num,$format);
-				$row = str_replace('#cat_list', implode(', ',$catList), $row);
+				$row = str_replace('#cat_list', implode(', ',$catList),$row);
 				$row = str_replace('#art_url',$this->plxMotor->urlRewrite('?article'.$num.'/'.$art['url']),$row);
 				$row = str_replace('#art_status',$status,$row);
 				$author = plxUtils::getValue($this->plxMotor->aUsers[$art['author']]['name']);
@@ -916,17 +949,21 @@ class plxShow {
 				$row = str_replace('#art_title',plxUtils::strCheck($art['title']),$row);
 				$strlength = preg_match('/#art_chapo\(([0-9]+)\)/',$row,$capture) ? $capture[1] : '100';
 				$chapo = plxUtils::truncate($art['chapo'],$strlength,$ending,true,true);
-				$row = str_replace('#art_chapo('.$strlength.')','#art_chapo', $row);
+				$row = str_replace('#art_chapo('.$strlength.')','#art_chapo',$row);
 				$row = str_replace('#art_chapo',$chapo,$row);
 				$strlength = preg_match('/#art_content\(([0-9]+)\)/',$row,$capture) ? $capture[1] : '100';
 				$content = plxUtils::truncate($art['content'],$strlength,$ending,true,true);
-				$row = str_replace('#art_content('.$strlength.')','#art_content', $row);
-				$row = str_replace('#art_content',$content, $row);
+				$row = str_replace('#art_content('.$strlength.')','#art_content',$row);
+				$row = str_replace('#art_content',$content,$row);
 				$row = str_replace('#art_date',plxDate::formatDate($date,'#num_day/#num_month/#num_year(4)'),$row);
 				$row = str_replace('#art_hour',plxDate::formatDate($date,'#hour:#minute'),$row);
 				$row = str_replace('#art_time',plxDate::formatDate($date,'#time'),$row);
 				$row = plxDate::formatDate($date,$row);
-				$row = str_replace('#art_nbcoms',$art['nb_com'], $row);
+				$row = str_replace('#art_nbcoms',$art['nb_com'],$row);
+				$row = str_replace('#art_thumbnail', '<img class="art_thumbnail" src="#img_url" alt="#img_alt" title="#img_title" />',$row);
+				$row = str_replace('#img_url',$this->plxMotor->urlRewrite($art['thumbnail']),$row);
+				$row = str_replace('#img_title',$art['thumbnail_title'],$row);
+				$row = str_replace('#img_alt',$art['thumbnail_alt'],$row);
 				# Hook plugin
 				eval($this->plxMotor->plxPlugins->callHook('plxShowLastArtListContent'));
 				# On genère notre ligne
@@ -980,15 +1017,28 @@ class plxShow {
 	}
 
 	/**
-	 * Méthode qui affiche le niveau d'indentation du commentaire
+	 * Méthode qui retourne le niveau d'indentation du commentaire
+	 *
+	 * @return	integer		numéro du niveau d'indentation du commentaire
+	 * @scope	article
+	 * @author	Stephane F.
+	 **/
+	public function comNumLevel() {
+		return $this->plxMotor->plxRecord_coms->f('level');
+	}
+
+	/**
+	 * Méthode qui formate et affiche le niveau d'indentation du commentaire
 	 *
 	 * @return	stdout
 	 * @scope	article
 	 * @author	Stephane F.
 	 **/
 	public function comLevel() {
-
-		echo $this->plxMotor->plxRecord_coms->f('level');
+		if($this->comNumLevel() > 5)
+			echo 'level-'.$this->comNumLevel().' level-max';
+		else
+			echo 'level-'.$this->comNumLevel();
 	}
 
 	/**
