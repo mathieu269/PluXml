@@ -14,14 +14,10 @@
 	if(file_exists(PLX_ROOT.$plxAdmin->aConf['racine_plugins'].'admin.css'))
 		echo '<link rel="stylesheet" type="text/css" href="'.PLX_ROOT.$plxAdmin->aConf['racine_plugins'].'admin.css" media="screen" />'."\n";
 	?>
-	<?php if(PLX_DEBUG) : ?>
-	<script src="<?php echo PLX_CORE ?>lib/js.src/functions.js?ver=<?php echo PLX_VERSION ?>"></script>
-	<script src="<?php echo PLX_CORE ?>lib/js.src/visual.js?ver=<?php echo PLX_VERSION ?>"></script>
-	<script src="<?php echo PLX_CORE ?>lib/js.src/mediasManager.js?ver=<?php echo PLX_VERSION ?>"></script>
-	<script defer src="<?php echo PLX_CORE ?>lib/js.src/multifiles.js?ver=<?php echo PLX_VERSION ?>"></script>	
-	<?php else : ?>
-	<script defer src="<?php echo PLX_CORE ?>lib/pluxml.min.js.js?ver=<?php echo PLX_VERSION ?>"></script>	
-	<?php endif; ?>
+	<script src="<?php echo PLX_CORE ?>lib/functions.js?ver=<?php echo PLX_VERSION ?>"></script>
+	<script src="<?php echo PLX_CORE ?>lib/visual.js?ver=<?php echo PLX_VERSION ?>"></script>
+	<script src="<?php echo PLX_CORE ?>lib/mediasManager.js?ver=<?php echo PLX_VERSION ?>"></script>
+	<script defer src="<?php echo PLX_CORE ?>lib/multifiles.js?ver=<?php echo PLX_VERSION ?>"></script>
 	<?php eval($plxAdmin->plxPlugins->callHook('AdminTopEndHead')) ?>
 </head>
 
@@ -56,7 +52,7 @@
 						else echo L_PROFIL_WRITER; ?>
 					</em>
 				</li>
-				<li><small><a class="version" title="PluXml" href="http://www.pluxml.org">Pluxml <?php echo $plxAdmin->aConf['version'] ?></a></small></li>
+				<li><small><a class="version" title="PluXml" href="http://www.pluxml.org">PluXml <?php echo $plxAdmin->aConf['version'] ?></a></small></li>
 			</ul>
 		</header>
 		<nav class="responsive-menu">
@@ -82,7 +78,7 @@
 
 					if($_SESSION['profil'] <= PROFIL_MODERATOR) {
 						$nbcoms = $plxAdmin->nbComments('offline');
-						$coms_offline = $nbcoms>0 ? '<span class="badge"<a href="'.PLX_CORE.'admin/comments.php?sel=offline&amp;page=1">'.$plxAdmin->nbComments('offline').'</span>':'';
+						$coms_offline = $nbcoms>0 ? '<span class="badge" onclick="window.location=\''.PLX_CORE.'admin/comments.php?sel=offline&amp;page=1\';return false;">'.$plxAdmin->nbComments('offline').'</span>':'';
 						$menus[] = plxUtils::formatMenu(L_MENU_COMMENTS, PLX_CORE.'admin/comments.php?page=1', L_MENU_COMMENTS_TITLE, false, false, $coms_offline);
 					}
 
